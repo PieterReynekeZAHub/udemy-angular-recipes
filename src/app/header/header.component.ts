@@ -1,17 +1,33 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {RecipeService} from "../recipes/recipe.service";
 import {DataStorageService} from "../shared/data-storage.service";
+import {AuthService} from "../auth/auth.service";
+import {Subject, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy{
   @Output() featureSelected = new EventEmitter<string>()
   collapsed = true;
+  private userSub: Subscription;
+  isAuthenticated = false;
 
-  constructor(private dataStore: DataStorageService) {
+  constructor(private dataStore: DataStorageService, private authService: AuthService) {
+  }
+
+  ngOnInit() {
+    this.userSub = this.authService.user.subscribe( user =>{
+      this.isAuthenticated = !!user;
+      console.log(!user);
+      console.log(!!user);
+    });
+  }
+
+  ngOnDestroy() {
+    this.userSub.unsubscribe();
   }
 
   onSelect(feature: string) {
@@ -24,5 +40,9 @@ export class HeaderComponent {
 
   onFetchData() {
    this.dataStore.fetchRecipes().subscribe();
+  }
+
+  onLogout(){
+    this.authService.logout();
   }
 }
