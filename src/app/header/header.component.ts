@@ -1,8 +1,7 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {RecipeService} from "../recipes/recipe.service";
 import {DataStorageService} from "../shared/data-storage.service";
 import {AuthService} from "../auth/auth.service";
-import {Subject, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -30,9 +29,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
     this.userSub.unsubscribe();
   }
 
-  onSelect(feature: string) {
-    this.featureSelected.emit(feature)
-  }
+  // onSelect(feature: string) {
+  //   this.featureSelected.emit(feature)
+  // }
 
   onSaveData() {
     this.dataStore.storeRecipes();
