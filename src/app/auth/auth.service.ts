@@ -21,7 +21,7 @@ export class AuthService {
 
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimeout: any;
-  private apiKey = environment.apiKey;
+
 
 
 
@@ -30,10 +30,7 @@ export class AuthService {
   }
 
   signup(email: string, password: string) {
-
-
-
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+this.apiKey, {
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+environment.apiKey, {
         email: email,
         password: password,
         returnSecureToken: true
@@ -48,8 +45,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    const apiKey = this.apiKey;
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+apiKey, {
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+ environment.apiKey, {
       email: email,
       password: password,
       returnSecureToken: true
