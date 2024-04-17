@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Some great recipes from the community!!</h2>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-12">
+    <app-discover-item *ngFor="let recipeEl of otherRecipes; let i = index"
+                     [recipe]="recipeEl"
+                     [index] = i ></app-discover-item>
+  </div>
+</div>

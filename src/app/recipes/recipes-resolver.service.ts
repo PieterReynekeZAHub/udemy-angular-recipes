@@ -11,6 +11,19 @@ export const recipesResolver : ResolveFn<Recipe[]> = (
   state: RouterStateSnapshot
 ) => {
   const recipes = inject(RecipeService).getRecipes();
+  const isEmpty = inject(RecipeService).isEmpty
+  if (recipes.length === 0 && !isEmpty) {
+    return inject(DataStorageService).fetchRecipes();
+  } else {
+    return recipes;
+  }
+}
+
+export const otherRecipesResolver : ResolveFn<Recipe[]> = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const recipes = inject(RecipeService).getOtherRecipes();
   if (recipes.length === 0) {
     return inject(DataStorageService).fetchRecipes();
   } else {

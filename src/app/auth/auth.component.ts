@@ -46,7 +46,7 @@ export class AuthComponent {
         next: (responseData) => {
           console.log(responseData);
           this.isLoading = false;
-          this.router.navigate(['/recipes']);
+          this.router.navigate(['/my-recipes']);
         },
         error: (errorMessage) => {
           console.log(errorMessage);

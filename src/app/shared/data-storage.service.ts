@@ -13,6 +13,7 @@ export class DataStorageService {
 
   storeRecipes() {
     const recipes = this.recipesService.getRecipes();
+    console.log('recipes to store', recipes)
     this.http.put('https://recipe-app-fd8f4-default-rtdb.europe-west1.firebasedatabase.app/recipes.json', recipes)
       .subscribe({
         next: (response) => console.log(response)
@@ -24,16 +25,20 @@ export class DataStorageService {
     return this.http.get<Recipe[]>('https://recipe-app-fd8f4-default-rtdb.europe-west1.firebasedatabase.app/recipes.json'
     ).pipe(
       map(recipes => {
-        return recipes.map(recipe => {
-          return {
-            ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []
-          };
-        });
+        if (recipes === null) {
+          return []; // Return an empty array if recipes is null
+        } else {
+          return recipes.map(recipe => {
+            return {
+              ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []
+            };
+          });
+        }
       }),
       tap((recipes) => {
         this.recipesService.setRecipes(recipes)
       })
     );
-  }
 
+  }
 }

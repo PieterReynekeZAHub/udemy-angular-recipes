@@ -12,20 +12,21 @@ import {SharedModule} from "../shared/shared.module";
 import {ShortenPipe} from "../shared/shorten.pipe";
 
 @NgModule({
-  declarations:[
+  declarations: [
     RecipesComponent,
     RecipeListComponent,
     RecipeDetailComponent,
     RecipeItemComponent,
     RecipeStartComponent,
-    RecipeEditComponent,
-    ShortenPipe
+    RecipeEditComponent
   ],
-    imports: [
-        RouterModule,
-        ReactiveFormsModule,
-        RecipesRoutingModule,
-        SharedModule
-    ]
+  imports: [
+    RouterModule,
+    ReactiveFormsModule,
+    RecipesRoutingModule,
+    SharedModule,
+    ShortenPipe
+  ]
 })
-export class RecipesModule{}
+export class RecipesModule {
+}

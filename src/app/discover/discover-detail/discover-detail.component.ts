@@ -1,14 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Recipe} from "../recipe.model";
-import {RecipeService} from "../recipe.service";
+
 import {ActivatedRoute, Params, Router} from "@angular/router";
+import {Recipe} from "../../recipes/recipe.model";
+import {RecipeService} from "../../recipes/recipe.service";
 
 @Component({
-  selector: 'app-recipe-detail',
-  templateUrl: './recipe-detail.component.html',
-  styleUrl: './recipe-detail.component.css'
+  selector: 'app-discover-detail',
+  templateUrl: './discover-detail.component.html',
+  styleUrl: './discover-detail.component.css'
 })
-export class RecipeDetailComponent implements OnInit{
+export class DiscoverDetailComponent implements OnInit{
 
   recipe: Recipe;
   id: number;
@@ -22,8 +23,9 @@ export class RecipeDetailComponent implements OnInit{
     this.route.params.subscribe(
       (params: Params) => {
         this.id = +params['id']
-        this.recipe = this.recipeService.getMyRecipe(this.id);
+        this.recipe = this.recipeService.getOtherRecipe(this.id);
       }
+
     )
   }
 
@@ -33,15 +35,11 @@ export class RecipeDetailComponent implements OnInit{
 
   }
 
-  onEditRecipe() {
-
-    this.router.navigate(['edit'], {relativeTo: this.route})
-
-
+ onAddToRecipes(){
+    console.log("HERE!!!!!")
+   console.log(this.recipe)
+      this.recipeService.addRecipe(this.recipe)
   }
 
-  onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id);
-    this.router.navigate(['/my-recipes'])
-  }
+
 }
