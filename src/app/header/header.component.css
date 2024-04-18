@@ -1,0 +1,6 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000; /* This ensures the navbar stays on top of other elements */
+}
