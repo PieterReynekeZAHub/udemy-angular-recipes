@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, isDevMode} from '@angular/core';
 import {HttpClientModule} from "@angular/common/http";
 
 import {AppComponent} from './app.component';
@@ -11,6 +11,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import * as fromApp from './store/app.reducer'
 import {AuthEffects} from "./auth/store/auth.effects";
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +25,9 @@ import {AuthEffects} from "./auth/store/auth.effects";
     SharedModule,
     CoreModule,
     EffectsModule.forRoot([AuthEffects]),
-    StoreModule.forRoot(fromApp.appReducer)
+    StoreModule.forRoot(fromApp.appReducer),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreRouterConnectingModule.forRoot()
   ],
 
   bootstrap: [AppComponent]
