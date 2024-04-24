@@ -1,8 +1,6 @@
 import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {NgForm} from "@angular/forms";
-import {AuthResponseData, AuthService} from "./auth.service";
-import {Observable, Subscription} from "rxjs";
-import {Router} from "@angular/router";
+import {Subscription} from "rxjs";
 import * as fromApp from "../store/app.reducer"
 import * as authActions from "../auth/store/auth.actions"
 import {Store} from "@ngrx/store";
@@ -23,7 +21,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   private storeSub: Subscription;
 
 
-  constructor(private authService: AuthService, private componentFactoryResolver: ComponentFactoryResolver, private router: Router, private store: Store<fromApp.AppState>) {
+  constructor(private componentFactoryResolver: ComponentFactoryResolver, private store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
@@ -39,10 +37,10 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.storeSub){
+    if (this.storeSub) {
       this.storeSub.unsubscribe()
     }
-    if(this.closeSub){
+    if (this.closeSub) {
       this.closeSub.unsubscribe()
     }
   }
@@ -50,8 +48,6 @@ export class AuthComponent implements OnInit, OnDestroy {
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
   }
-
-  protected readonly onsubmit = onsubmit;
 
   onSubmit(form: NgForm) {
     this.error = null;
