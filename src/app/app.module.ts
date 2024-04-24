@@ -10,6 +10,7 @@ import {CoreModule} from "./core.module";
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import * as fromApp from './store/app.reducer'
+import {AuthEffects} from "./auth/store/auth.effects";
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +22,7 @@ import * as fromApp from './store/app.reducer'
     AppRoutingModule,
     SharedModule,
     CoreModule,
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([AuthEffects]),
     StoreModule.forRoot(fromApp.appReducer)
   ],
 

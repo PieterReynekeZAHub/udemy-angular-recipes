@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {Store} from "@ngrx/store";
 import * as fromApp from "../store/app.reducer"
 import {map} from "rxjs/operators";
+import * as authActions from "../auth/store/auth.actions";
 
 @Component({
   selector: 'app-header',
@@ -35,9 +36,6 @@ export class HeaderComponent implements OnInit, OnDestroy{
     this.userSub.unsubscribe();
   }
 
-  // onSelect(feature: string) {
-  //   this.featureSelected.emit(feature)
-  // }
 
   onSaveData() {
     this.dataStore.storeRecipes();
@@ -48,6 +46,6 @@ export class HeaderComponent implements OnInit, OnDestroy{
   }
 
   onLogout(){
-    this.authService.logout();
+    this.store.dispatch(authActions.logout())
   }
 }
