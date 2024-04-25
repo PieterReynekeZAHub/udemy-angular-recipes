@@ -33,10 +33,13 @@ export const otherRecipesResolver : ResolveFn<Recipe[]> = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
 ) => {
-  const recipes = inject(RecipeService).getOtherRecipes();
-  if (recipes.length === 0) {
-    return inject(DataStorageService).fetchRecipes();
-  } else {
-    return recipes;
-  }
+  const store = inject(Store<fromApp.AppState>);
+  const actions$ = inject(Actions);
+
+  store.dispatch(fetchRecipes());
+  return actions$.pipe(
+    ofType(RecipeActions.setMyRecipes),
+    take(1),
+    map(action => action.recipes.otherRecipes)
+  );
 }
