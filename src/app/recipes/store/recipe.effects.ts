@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {of} from "rxjs";
-import {map, switchMap} from "rxjs/operators";
+import {map, switchMap, tap, withLatestFrom} from "rxjs/operators";
 import {Store} from "@ngrx/store";
 import * as fromApp from "../../store/app.reducer";
 import * as fromRecipeActions from "./recipe.actions";
@@ -10,13 +10,6 @@ import {setMyRecipes, startRecipeSorting} from "./recipe.actions";
 import {HttpClient} from "@angular/common/http";
 
 
-export class RecipeState{
-  public myRecipes: Recipe[];
-  public otherRecipes: Recipe[];
-
-  constructor(myRecipes: Recipe[], otherRecipes: Recipe[]) {
-  }
-}
 @Injectable()
 export class RecipeEffects {
 
@@ -49,14 +42,24 @@ export class RecipeEffects {
       console.log("Return Recipes from API", recipes)
       return setMyRecipes({recipes: this.sortRecipes(recipes)})
     })
-    ));
+  ));
 
-
+  addRecipe = createEffect(() => this.actions$.pipe(
+    ofType(fromRecipeActions.addRecipe),
+    withLatestFrom(this.store.select('recipes')),
+    tap(([actionData, recipeState]) => {
+      console.log('recipeState', recipeState);
+      this.store.dispatch(setMyRecipes({recipes: this.sortRecipes(recipeState.recipes)}))
+    }
+  )),
+    {dispatch: false}
+  );
 
 
   constructor(private actions$: Actions, private store: Store<fromApp.AppState>, private http: HttpClient) {
 
   }
+
 
   private sortRecipes(recipesToSort: Recipe[]) {
     const myRecipes = [];
@@ -73,13 +76,15 @@ export class RecipeEffects {
       // console.log('userData.id', userData.id)
       if (recipe.userIds.includes(userData.id)) {
         myRecipes.push(recipe)
-      }else{
+      } else {
         otherRecipes.push(recipe)
       }
 
     }
-    const recipeState = {myRecipes: myRecipes,
-    otherRecipes: otherRecipes}
+    const recipeState = {
+      recipes: recipesToSort, myRecipes: myRecipes,
+      otherRecipes: otherRecipes
+    }
     console.log("RecipeState = ", recipeState)
     return recipeState;
   }

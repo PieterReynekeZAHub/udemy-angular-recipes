@@ -1,6 +1,5 @@
 import {createAction, props} from "@ngrx/store";
 import {Recipe} from "../recipe.model";
-import {RecipeState} from "./recipe.effects";
 
 export const START_RECIPE_SORTING = '[Recipe] Start Recipe Sorting';
 export const SET_RECIPES = '[Recipe] Set Recipes';
@@ -19,7 +18,7 @@ export const setRecipes = createAction(
 
 export const setMyRecipes = createAction(
   SET_MY_RECIPES,
-  props<{ recipes: {myRecipes: Recipe[], otherRecipes: Recipe[]} }>()
+  props<{ recipes: { recipes: Recipe[], myRecipes: Recipe[], otherRecipes: Recipe[] } }>()
 )
 
 export const setOtherRecipes = createAction(

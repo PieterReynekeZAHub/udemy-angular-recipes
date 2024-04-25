@@ -5,6 +5,7 @@ import {RecipeService} from "../recipe.service";
 import {Recipe} from "../recipe.model";
 import {Store} from "@ngrx/store";
 import * as fromApp from "../../store/app.reducer";
+import * as fromRecipeActions from "../store/recipe.actions";
 import {map} from "rxjs/operators";
 
 @Component({
@@ -90,7 +91,7 @@ export class RecipeEditComponent implements OnInit {
     if (this.editMode) {
       this.recipeService.updateRecipe(this.id, newRecipe)
     } else{
-      this.recipeService.addRecipe(newRecipe);
+      this.store.dispatch(fromRecipeActions.addRecipe({recipe: newRecipe}));
     }
     this.onCancel();
   }
