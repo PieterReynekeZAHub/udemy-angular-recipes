@@ -8,13 +8,12 @@ import {DiscoverComponent} from "./discover.component";
 import {DiscoverItemComponent} from "./discover-item/discover-item.component";
 import {DiscoverDetailComponent} from "./discover-detail/discover-detail.component";
 import {RecipeStartComponent} from "../recipes/recipe-start/recipe-start.component";
-import {otherRecipesResolver} from "../recipes/recipes-resolver.service";
 
 const appRoutes: Routes =[
   {path: '', component: DiscoverComponent,
     children: [
-      {path: '', component: RecipeStartComponent, resolve: {recipes: otherRecipesResolver}},
-      {path: ':id', component: DiscoverDetailComponent, resolve: {recipes: otherRecipesResolver}}
+      {path: '', component: RecipeStartComponent},
+      {path: ':id', component: DiscoverDetailComponent}
     ]},
 ]
 @NgModule({

@@ -1,6 +1,6 @@
 import {Recipe} from "../recipe.model";
 import {createReducer, on} from "@ngrx/store";
-import {addRecipe, setMyRecipes, setRecipes, startRecipeSorting} from "./recipe.actions";
+import {setMyRecipes, startRecipeSorting} from "./recipe.actions";
 
 export interface State{
   recipes: Recipe[];
@@ -20,7 +20,8 @@ export const recipeReducer = createReducer(
 on(setMyRecipes, (state, action) => {
     return {
       ...state,
-      myRecipes: [...action.recipes]
+      myRecipes: [...action.recipes.myRecipes],
+      otherRecipes: [...action.recipes.otherRecipes],
     }
   }),
   on(startRecipeSorting, (state, action) => {
