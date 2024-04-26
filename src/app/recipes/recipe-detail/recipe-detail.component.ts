@@ -14,7 +14,7 @@ import {map, switchMap} from "rxjs/operators";
 export class RecipeDetailComponent implements OnInit {
 
   recipe: Recipe;
-  id: number;
+  id: string;
 
   constructor(private recipeService: RecipeService,
               private route: ActivatedRoute,
@@ -24,13 +24,13 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.pipe(map(params => {
-      return +params['id'];
+      return params['id'];
     }), switchMap(id => {
       this.id = id;
       return this.store.select('recipes')
     }), map(recipesState => {
       return recipesState.myRecipes.find((recipe, index) => {
-        return index === this.id;
+        return recipe.recipeId === this.id;
       });
     }))
       .subscribe(
@@ -55,7 +55,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id);
+    // this.recipeService.deleteRecipe(this.id);
     this.router.navigate(['/my-recipes'])
   }
 }

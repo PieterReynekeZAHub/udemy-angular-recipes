@@ -1,15 +1,12 @@
 import {inject} from "@angular/core";
 import {ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot} from "@angular/router";
 import {Recipe} from "./recipe.model";
-import {DataStorageService} from "../shared/data-storage.service";
-
-import {RecipeService} from "./recipe.service";
 import {Store} from "@ngrx/store";
 import * as fromApp from "../store/app.reducer"
 import {Actions, ofType} from "@ngrx/effects";
+import * as RecipeActions from "./store/recipe.actions";
 import {fetchRecipes} from "./store/recipe.actions";
 import {map, take} from "rxjs/operators";
-import * as RecipeActions from "./store/recipe.actions";
 import {Observable} from "rxjs";
 
 

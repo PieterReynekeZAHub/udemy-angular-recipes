@@ -4,6 +4,8 @@ import {Ingredient} from "../shared/ingredient.model";
 import {Subject} from "rxjs";
 import {Store} from "@ngrx/store";
 import {ADD_INGREDIENTS} from "../shopping-list/store/shopping-list.actions";
+import * as fromRecipeActions from "./store/recipe.actions";
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class RecipeService {
@@ -71,65 +73,43 @@ export class RecipeService {
     console.log("HERE!!")
     console.log("Before Updates: " , this.otherRecipes)
     const userId = JSON.parse(localStorage.getItem('userData')).id;
-    if(recipe.userIds.includes(userId) && !recipe.ownerId.includes(userId)){
-      console.log("User already in list of userIds")
-    }else{
-      console.log("added UserID" + userId)
-      recipe.userIds.push(userId);
-      if(!recipe.ownerId.includes(userId)){
-        this.otherRecipes[this.otherRecipes.indexOf(recipe)].userIds.push(userId);
-        console.log("added userID: " + userId + " to other recipes")
-
-      }
-    }
-    ///ensure not to add recipe if already in list
-    if(!this.recipes.includes(recipe)){
-      this.recipes.push(recipe);
-      console.log("Recipe already in list")
-    }
-    this.myRecipes.push(recipe);
-    console.log("Updated Other recipes" , this.otherRecipes)
-    this.myRecipesChanged.next(this.myRecipes.slice())
-    this.otherRecipesChanged.next(this.otherRecipes.slice())
+    console.log("added UserID" + userId)
+    recipe.userIds = [];
+    recipe.userIds.push(userId);
+    recipe.ownerId = userId;
+    recipe.recipeId =  uuidv4();
+    this.store.dispatch(fromRecipeActions.addRecipe({recipe: recipe}));
 
   }
 
-  updateRecipe(index: number, newRecipe: Recipe){
-    this.recipes[index] = newRecipe;
-    this.myRecipes[index] = newRecipe;
-    this.recipesChanged.next(this.recipes.slice())
-    this.myRecipesChanged.next(this.myRecipes.slice())
-    this.otherRecipesChanged.next(this.otherRecipes.slice())
-  }
-
-  deleteRecipe(index: number){
-    const recipe = this.myRecipes[index];
-    const userId = JSON.parse(localStorage.getItem('userData')).id;
-    this.myRecipes.splice(index, 1);
-    // loop through recipes and delete recipe with the id
-    for (let i = 0; i < this.recipes.length; i++){
-      if (this.recipes[i].recipeId === recipe.recipeId){
-        //only delete if the recipe is owned by the user
-        if(this.recipes[i].ownerId === userId){
-          this.recipes.splice(i, 1);
-          if(this.recipes.length === 0){
-            this._Empty = true;
-          }
-        }else{
-          this.recipes[i].userIds.splice(this.recipes[i].userIds.indexOf(userId), 1);
-        }
-        break;
-      }
-    }
-    for (let i = 0; i < this.otherRecipes.length; i++) {
-      if (this.otherRecipes[i].recipeId === recipe.recipeId) {
-        this.otherRecipes[i].userIds.splice(this.otherRecipes[i].userIds.indexOf(JSON.parse(localStorage.getItem('userData')).id), 1);
-        break;
-      }
-    }
-    this.myRecipesChanged.next(this.myRecipes.slice())
-    this.otherRecipesChanged.next(this.otherRecipes.slice())
-  }
+  // deleteRecipe(index: string){
+  //   const recipe = this.myRecipes[index];
+  //   const userId = JSON.parse(localStorage.getItem('userData')).id;
+  //   this.myRecipes.splice(index, 1);
+  //   // loop through recipes and delete recipe with the id
+  //   for (let i = 0; i < this.recipes.length; i++){
+  //     if (this.recipes[i].recipeId === recipe.recipeId){
+  //       //only delete if the recipe is owned by the user
+  //       if(this.recipes[i].ownerId === userId){
+  //         this.recipes.splice(i, 1);
+  //         if(this.recipes.length === 0){
+  //           this._Empty = true;
+  //         }
+  //       }else{
+  //         this.recipes[i].userIds.splice(this.recipes[i].userIds.indexOf(userId), 1);
+  //       }
+  //       break;
+  //     }
+  //   }
+  //   for (let i = 0; i < this.otherRecipes.length; i++) {
+  //     if (this.otherRecipes[i].recipeId === recipe.recipeId) {
+  //       this.otherRecipes[i].userIds.splice(this.otherRecipes[i].userIds.indexOf(JSON.parse(localStorage.getItem('userData')).id), 1);
+  //       break;
+  //     }
+  //   }
+  //   this.myRecipesChanged.next(this.myRecipes.slice())
+  //   this.otherRecipesChanged.next(this.otherRecipes.slice())
+  // }
 
   setRecipes(recipes: Recipe[]){
     console.log('set Recipe', recipes)

@@ -10,6 +10,7 @@ export const UPDATE_RECIPE = '[Recipe] Update Recipe';
 export const DELETE_RECIPE = '[Recipe] Delete Recipe';
 export const STORE_RECIPES = '[Recipe] Store Recipes';
 export const FETCH_RECIPES = '[Recipe] Fetch Recipes';
+export const CLEAR_RECIPES = '[Recipe] Clear Recipes';
 
 export const setRecipes = createAction(
   SET_RECIPES,
@@ -38,7 +39,7 @@ export const addRecipe = createAction(
 
 export const updateRecipe = createAction(
   UPDATE_RECIPE,
-  props<{ index: number, newRecipe: Recipe }>()
+  props<{ index: string, newRecipe: Recipe }>()
 )
 
 export const deleteRecipe = createAction(
@@ -52,4 +53,8 @@ export const storeRecipes = createAction(
 
 export const fetchRecipes = createAction(
   FETCH_RECIPES
+)
+
+export const clearRecipes = createAction(
+  CLEAR_RECIPES
 )

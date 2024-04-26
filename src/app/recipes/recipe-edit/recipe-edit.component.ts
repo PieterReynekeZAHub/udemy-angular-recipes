@@ -7,6 +7,7 @@ import {Store} from "@ngrx/store";
 import * as fromApp from "../../store/app.reducer";
 import * as fromRecipeActions from "../store/recipe.actions";
 import {map} from "rxjs/operators";
+import {updateRecipe} from "../store/recipe.actions";
 
 @Component({
   selector: 'app-recipe-edit',
@@ -15,7 +16,7 @@ import {map} from "rxjs/operators";
 })
 export class RecipeEditComponent implements OnInit {
 
-  id: number;
+  id: string;
   editMode = false;
   recipeForm: FormGroup;
 
@@ -29,7 +30,7 @@ export class RecipeEditComponent implements OnInit {
     this.route.params
       .subscribe(
         (params: Params) => {
-          this.id = +params['id'];
+          this.id = params['id'];
           this.editMode = params['id'] != null;
           this.initForm();
         }
@@ -37,6 +38,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   private initForm() {
+    let recipeId = '';
     let recipeName = '';
     let recipeImagePath = '';
     let recipeDescription = '';
@@ -45,9 +47,10 @@ export class RecipeEditComponent implements OnInit {
     if (this.editMode) {
       const recipe = this.store.select('recipes').pipe(map(recipeState => {
         return recipeState.myRecipes.find((recipe, index) => {
-          return index === this.id;
+          return recipe.recipeId === this.id;
         });
         })).subscribe(recipe => {
+        recipeId = recipe.recipeId;
         recipeName = recipe.name;
         recipeImagePath = recipe.imagePath;
         recipeDescription = recipe.description;
@@ -67,6 +70,7 @@ export class RecipeEditComponent implements OnInit {
 
     }
     this.recipeForm = new FormGroup({
+      'recipeId': new FormControl(recipeId),
       'name': new FormControl(recipeName, Validators.required),
       'imagePath': new FormControl(recipeImagePath, Validators.required),
       'description': new FormControl(recipeDescription, Validators.required),
@@ -82,18 +86,18 @@ export class RecipeEditComponent implements OnInit {
       _tokenExpirationDate: string
     } = JSON.parse(localStorage.getItem('userData'));
 
-    const newRecipe = new Recipe(
-      userData.id,
-      this.recipeForm.value['name'],
-      this.recipeForm.value['description'],
-      this.recipeForm.value['imagePath'],
-      this.recipeForm.value['ingredients']);
+    // const newRecipe = new Recipe(
+    //   userData.id,
+    //   this.recipeForm.value['name'],
+    //   this.recipeForm.value['description'],
+    //   this.recipeForm.value['imagePath'],
+    //   this.recipeForm.value['ingredients']);
     if (this.editMode) {
-      this.recipeService.updateRecipe(this.id, newRecipe)
+      this.store.dispatch(updateRecipe({index: this.id, newRecipe: this.recipeForm.value}))
     } else{
-      this.store.dispatch(fromRecipeActions.addRecipe({recipe: newRecipe}));
+      this.recipeService.addRecipe(this.recipeForm.value)
     }
-    this.onCancel();
+    // this.onCancel();
   }
 
   get controls() { // a getter!

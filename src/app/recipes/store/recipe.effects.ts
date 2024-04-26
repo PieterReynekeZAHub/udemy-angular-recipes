@@ -6,8 +6,9 @@ import {Store} from "@ngrx/store";
 import * as fromApp from "../../store/app.reducer";
 import * as fromRecipeActions from "./recipe.actions";
 import {Recipe} from "../recipe.model";
-import {setMyRecipes, startRecipeSorting} from "./recipe.actions";
+import {setMyRecipes, startRecipeSorting, storeRecipes} from "./recipe.actions";
 import {HttpClient} from "@angular/common/http";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 @Injectable()
@@ -49,14 +50,50 @@ export class RecipeEffects {
     withLatestFrom(this.store.select('recipes')),
     tap(([actionData, recipeState]) => {
       console.log('recipeState', recipeState);
-      this.store.dispatch(setMyRecipes({recipes: this.sortRecipes(recipeState.recipes)}))
+      this.store.dispatch(storeRecipes())
     }
   )),
     {dispatch: false}
   );
 
+  updateRecipe = createEffect(() => this.actions$.pipe(
+    ofType(fromRecipeActions.updateRecipe),
+    withLatestFrom(this.store.select('recipes')),
+    tap(([actionData, recipeState]) => {
+      console.log('recipeState', recipeState);
+      this.store.dispatch(storeRecipes())
+    }
+  )),
+    {dispatch: false}
+  );
 
-  constructor(private actions$: Actions, private store: Store<fromApp.AppState>, private http: HttpClient) {
+  storeRecipes = createEffect(() => this.actions$.pipe(
+    ofType(fromRecipeActions.storeRecipes),
+    withLatestFrom(this.store.select('recipes')),
+    switchMap(([actionData, recipeState]) => {
+      return this.http.put('https://recipe-app-fd8f4-default-rtdb.europe-west1.firebasedatabase.app/recipes.json', recipeState.recipes).pipe(
+        tap(response => {
+          console.log('Response from storeRecipes', response)
+          this.router.navigate(['/my-recipes'])
+        })
+
+      );
+    })
+  ),
+    {dispatch: false}
+  );
+
+  // setMyRecipes = createEffect(() => this.actions$.pipe(
+  //   ofType(fromRecipeActions.setMyRecipes),
+  //   tap(() => {
+  //   this.store.dispatch(storeRecipes())
+  //   })
+  // ), {dispatch: false});
+
+
+
+
+  constructor(private actions$: Actions, private store: Store<fromApp.AppState>, private http: HttpClient, private router: Router, private route: ActivatedRoute) {
 
   }
 

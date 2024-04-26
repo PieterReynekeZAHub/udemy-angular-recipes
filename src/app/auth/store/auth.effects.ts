@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {catchError, map, switchMap, tap} from "rxjs/operators";
 import * as AuthActions from './auth.actions';
+import * as RecipeActions from '../../recipes/store/recipe.actions'
 import {environment} from "../../../environments/environment";
 
 import {HttpClient} from "@angular/common/http";
@@ -138,6 +139,7 @@ export class AuthEffects {
           localStorage.removeItem('userData');
           this.router.navigate(['/auth'])
           this.authService.clearExpirationTimer();
+          this.store.dispatch(RecipeActions.clearRecipes())
         }
       )), {dispatch: false});
 
