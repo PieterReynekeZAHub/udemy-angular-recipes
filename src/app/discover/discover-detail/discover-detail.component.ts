@@ -6,6 +6,7 @@ import {RecipeService} from "../../recipes/recipe.service";
 import {map, switchMap} from "rxjs/operators";
 import {Store} from "@ngrx/store";
 import * as fromApp from "../../store/app.reducer";
+import {ADD_INGREDIENTS} from "../../shopping-list/store/shopping-list.actions";
 
 @Component({
   selector: 'app-discover-detail',
@@ -44,7 +45,7 @@ export class DiscoverDetailComponent implements OnInit{
 
   onAddToShoppingList() {
 
-    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients)
+    this.store.dispatch({type: ADD_INGREDIENTS, value: this.recipe.ingredients})
 
   }
 

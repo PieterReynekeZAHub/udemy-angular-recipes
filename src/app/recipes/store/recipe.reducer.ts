@@ -1,6 +1,14 @@
 import {Recipe} from "../recipe.model";
 import {createReducer, on} from "@ngrx/store";
-import {addRecipe, clearRecipes, setMyRecipes, startRecipeSorting, updateRecipe} from "./recipe.actions";
+import {
+  addRecipe,
+  clearRecipes,
+  deleteRecipe,
+  deleteRecipeUser,
+  setMyRecipes,
+  startRecipeSorting,
+  updateRecipe
+} from "./recipe.actions";
 
 export interface State {
   recipes: Recipe[];
@@ -64,7 +72,37 @@ export const recipeReducer = createReducer(
         otherRecipes: []
       }
     }
+  ),
+  on(deleteRecipe, (state, action) => {
+      return {
+        ...state,
+        recipes: state.recipes.filter((recipe, index) => {
+          return recipe.recipeId !== action.index;
+        })
+      }
+  }
+),
+  on(deleteRecipeUser, (state, action) => {
+      const updatedRecipe = {
+
+        ...state.recipes.find((recipe, index) => {
+          return recipe.recipeId === action.index;
+        }),
+        ...action.recipe
+      }
+    updatedRecipe.userIds = updatedRecipe.userIds.filter((userId, index) => {
+      return userId !== action.userId;
+    });
+      const updatedRecipes = [...state.recipes];
+      const index = state.recipes.findIndex(recipe => recipe.recipeId === action.index);
+      updatedRecipes[index] = updatedRecipe;
+      return {
+        ...state,
+        recipes: updatedRecipes
+      }
+    }
   )
+
 )
 
 

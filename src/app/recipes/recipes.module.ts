@@ -10,6 +10,7 @@ import {RouterModule} from "@angular/router";
 import {RecipesRoutingModule} from "./recipes-routing.module";
 import {SharedModule} from "../shared/shared.module";
 import {ShortenPipe} from "../shared/shorten.pipe";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {ShortenPipe} from "../shared/shorten.pipe";
     ReactiveFormsModule,
     RecipesRoutingModule,
     SharedModule,
-    ShortenPipe
+    ShortenPipe,
+    MatTooltip
   ]
 })
 export class RecipesModule {

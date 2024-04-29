@@ -1,10 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Recipe} from "../recipe.model";
 import {RecipeService} from "../recipe.service";
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import * as fromApp from "../../store/app.reducer";
 import {map, switchMap} from "rxjs/operators";
+import {ADD_INGREDIENTS} from "../../shopping-list/store/shopping-list.actions";
+
 
 @Component({
   selector: 'app-recipe-detail',
@@ -43,7 +45,7 @@ export class RecipeDetailComponent implements OnInit {
 
   onAddToShoppingList() {
 
-    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients)
+    this.store.dispatch({type: ADD_INGREDIENTS, value: this.recipe.ingredients})
 
   }
 
@@ -55,7 +57,11 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe() {
-    // this.recipeService.deleteRecipe(this.id);
-    this.router.navigate(['/my-recipes'])
+   this.recipeService.deleteRecipe(this.id);
+  }
+
+  isOwner(){
+   const isOwner = this.recipe.ownerId === JSON.parse(localStorage.getItem('userData')).id ? true : false;
+    return isOwner
   }
 }

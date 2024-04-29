@@ -6,7 +6,7 @@ import {Store} from "@ngrx/store";
 import * as fromApp from "../../store/app.reducer";
 import * as fromRecipeActions from "./recipe.actions";
 import {Recipe} from "../recipe.model";
-import {setMyRecipes, startRecipeSorting, storeRecipes} from "./recipe.actions";
+import {deleteRecipe, setMyRecipes, startRecipeSorting, storeRecipes, updateRecipe} from "./recipe.actions";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -34,7 +34,7 @@ export class RecipeEffects {
       } else {
         return recipes.map(recipe => {
           return {
-            ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []
+            ...recipe, ingredients: recipe.ingredients  ? recipe.ingredients : []
           };
         });
       }
@@ -60,7 +60,29 @@ export class RecipeEffects {
     ofType(fromRecipeActions.updateRecipe),
     withLatestFrom(this.store.select('recipes')),
     tap(([actionData, recipeState]) => {
-      console.log('recipeState', recipeState);
+      console.log('recipeState-Update', recipeState);
+      this.store.dispatch(storeRecipes())
+    }
+  )),
+    {dispatch: false}
+  );
+
+  deleteRecipe = createEffect(() => this.actions$.pipe(
+    ofType(fromRecipeActions.deleteRecipe),
+    withLatestFrom(this.store.select('recipes')),
+    tap(([actionData, recipeState]) => {
+      console.log('recipeState-Update', recipeState);
+      this.store.dispatch(storeRecipes())
+    }
+  )),
+    {dispatch: false}
+  );
+
+  deleteRecipeUser = createEffect(() => this.actions$.pipe(
+    ofType(fromRecipeActions.deleteRecipeUser),
+    withLatestFrom(this.store.select('recipes')),
+    tap(([actionData, recipeState]) => {
+      console.log('recipeState-Update', recipeState);
       this.store.dispatch(storeRecipes())
     }
   )),
@@ -82,6 +104,12 @@ export class RecipeEffects {
   ),
     {dispatch: false}
   );
+
+
+
+
+
+
 
   // setMyRecipes = createEffect(() => this.actions$.pipe(
   //   ofType(fromRecipeActions.setMyRecipes),
@@ -111,7 +139,7 @@ export class RecipeEffects {
     for (let recipe of recipesToSort) {
       // console.log('userId ', recipe.userIds)
       // console.log('userData.id', userData.id)
-      if (recipe.userIds.includes(userData.id)) {
+      if (recipe.userIds.includes(userData.id) && myRecipes.find((myRecipe) => myRecipe.recipeId === recipe.recipeId) === undefined){
         myRecipes.push(recipe)
       } else {
         otherRecipes.push(recipe)

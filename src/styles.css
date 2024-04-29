@@ -1,9 +1,13 @@
 body, html {
   padding-top: 70px;
   width: 100vw;
+  height: 40vw;
   min-width: 100vw;
   max-width: 100vw;
 
   overflow-x: hidden;
   overflow-y: auto;/* Adjust this value based on the height of your navbar */
 }/* You can add global styles to this file, and also import other style files */
+
+/*html, body { height: 100%; }*/
+/*body { margin: 0; font-family:  "Helvetica Neue", sans-serif; }*/

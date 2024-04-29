@@ -8,6 +8,7 @@ export const SET_OTHER_RECIPES = '[Recipe] Set Other Recipes';
 export const ADD_RECIPE = '[Recipe] Add Recipe';
 export const UPDATE_RECIPE = '[Recipe] Update Recipe';
 export const DELETE_RECIPE = '[Recipe] Delete Recipe';
+export const DELETE_RECIPE_USER = '[Recipe] Delete Recipe User';
 export const STORE_RECIPES = '[Recipe] Store Recipes';
 export const FETCH_RECIPES = '[Recipe] Fetch Recipes';
 export const CLEAR_RECIPES = '[Recipe] Clear Recipes';
@@ -44,7 +45,12 @@ export const updateRecipe = createAction(
 
 export const deleteRecipe = createAction(
   DELETE_RECIPE,
-  props<{ index: number }>()
+  props<{ index: string }>()
+)
+
+export const deleteRecipeUser = createAction(
+DELETE_RECIPE_USER,
+  props<{ index: string, userId: string, recipe: Recipe }>()
 )
 
 export const storeRecipes = createAction(
