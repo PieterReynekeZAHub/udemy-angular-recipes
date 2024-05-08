@@ -1,0 +1,12 @@
+.manageNowBtn{
+    background-color: #f8f9fa;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 400px;
+    display: inline-block;
+    text-decoration: none;
+}

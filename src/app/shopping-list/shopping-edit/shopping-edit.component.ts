@@ -5,12 +5,26 @@ import {Subscription} from "rxjs";
 import {Store} from "@ngrx/store";
 import {addIngredient, deleteIngredient, stopEdit, updateIngredient} from "../store/shopping-list.actions";
 import * as fromApp from "../../store/app.reducer";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-shopping-edit',
   templateUrl: './shopping-edit.component.html',
-  styleUrl: './shopping-edit.component.css'
+  styleUrl: './shopping-edit.component.css',
+  animations: [
+    trigger('FormOnputAnimation', [
+      state('in', style({
+        opacity: 1
+      })),
+      transition('void => *', [
+        style({
+          opacity: 0
+        }), animate(800)
+      ]),
+    ]),
+  ]
 })
+
 export class ShoppingEditComponent implements OnInit, OnDestroy {
   @ViewChild('f', {static: false}) slForm: NgForm;
   subscription: Subscription;
